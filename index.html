@@ -9,16 +9,25 @@
     <script src="https://unpkg.com/vue@next"></script>
   </head>
   <body>
-    <div id="event-handling">
-      <ol>
-        <todo-item
-          v-for="item in groceryList"
-          v-bind:todo="item"
-          v-bind:key="item.id"
-        ></todo-item>
-      </ol>
-      {{ display("abc") }}
-      <button @click=flip_toggle>{{ now }}</button>
+    <div id="app">
+      <label for="row-num">Row number: </label>
+      <input type="number" name="row-num" id="row-num">
+      <label for="column-num">Column number: </label>
+      <input type="number" name="column-num" id="column-num">
+      <button @click="create_matrix">Create matrix</button>
+
+      <table>
+        <tbody>
+          <tr v-for="row in matrix">
+            <td v-for="value in row">
+              {{ value }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button @click="row_scaling">Row scaling</button>
+      <button @click="column_scaling">Column scaling</button>
     </div>
 
     <!-- Import Js -->

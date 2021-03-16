@@ -1,40 +1,20 @@
 const app = Vue.createApp({
     data() {
         return {
-            groceryList: [
-                { id: 0, text: 'Vegetables' },
-                { id: 1, text: 'aa' },
-                { id: 2, text: "bb" },
-            ],
-            count: 1,
-            toggle: false,
+            row_num: 3,
+            column_num: 3,
+            matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
         }
-    },
-    created() {
-        console.log('count is: ' + this.count)
     },
     methods: {
-        display(text) {
-            if (this.toggle) {
-                return text.split('').reverse().join('');
-            } else {
-                return text;
-            }
+        create_matrix() {
+            this.matrix = [[1, 0], [0, 1]]
         },
-        flip_toggle() {
-            this.toggle = !this.toggle;
+        row_scaling() {
+        },
+        column_scaling() {
         },
     },
-    computed: {
-        now() {
-            return Date.now()
-        }
-    }
 })
 
-app.component('todo-item', {
-    props: ['todo'],
-    template: `<li>{{ todo.text }}</li>`,
-})
-
-const vm = app.mount('#event-handling')
+const vm = app.mount('#app')
