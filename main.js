@@ -1,3 +1,10 @@
+const INITIAL_STATE = 0;
+const AFTER_ROW_SCALING = 1;
+const AFTER_COLUMN_SCALING = -1;
+
+const AUTO_OFF = 0;
+const AUTO_ON = 1;
+
 const app = Vue.createApp({
     data() {
         return {
@@ -6,6 +13,12 @@ const app = Vue.createApp({
             column_num: 3,
             input_column_num: "3",
             matrix: [[1, 1, 1], [0, 1, 0], [0, 0, 1]],
+            
+            scaling_status: INITIAL_STATE,
+            row_scaling_num: 0,
+            column_scaling_num: 0,
+
+            auto_status: AUTO_OFF,
         }
     },
     methods: {
@@ -36,8 +49,16 @@ const app = Vue.createApp({
             for (let i = this.row_num; i < this.column_num; i++) {
                 this.matrix[this.row_num - 1][i] = 1;
             }
+
+            this.scaling_status = INITIAL_STATE;
+            this.row_scaling_num = 0;
+            this.column_scaling_num = 0;
         },
         row_scaling() {
+            if (this.scaling_status === AFTER_ROW_SCALING) {
+                return;
+            }
+
             this.matrix = this.matrix.map(
                 row => {
                     // The `s` is the sum of each row.
@@ -45,8 +66,15 @@ const app = Vue.createApp({
                     return row.map(x => x / s);
                 }
             )
+
+            this.scaling_status = AFTER_ROW_SCALING;
+            this.row_scaling_num += 1;
         },
         column_scaling() {
+            if (this.scaling_status === AFTER_COLUMN_SCALING) {
+                return;
+            }
+
             // The `s` is the array having the sum of each column.
             const s = this.matrix.reduce(
                 (sum, row) => sum.map((x, i) => x + row[i]),
@@ -55,6 +83,15 @@ const app = Vue.createApp({
             this.matrix = this.matrix.map(
                 row => row.map((value, i) => value / s[i])
             );
+
+            this.scaling_status = AFTER_COLUMN_SCALING;
+            this.column_scaling_num += 1;
+        },
+        auto_scaling() {
+            setInterval(() => {
+                this.row_scaling();
+                this.column_scaling();
+            }, 1000)
         },
     },
 })

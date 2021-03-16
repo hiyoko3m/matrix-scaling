@@ -10,12 +10,21 @@
   </head>
   <body>
     <div id="app">
-      <label for="row-num">Row number: </label>
-      <input type="number" v-model="input_row_num" id="row-num" min="1" step="1">
-      <label for="column-num">Column number: </label>
-      <input type="number" v-model="input_column_num" id="column-num" min="1" step="1">
-      <button @click="reset_matrix">Reset</button>
+      <form v-on:submit.prevent="reset_matrix">
+        <label for="row-num">Row number: </label>
+        <input type="number" v-model="input_row_num" id="row-num" min="1" step="1" placeholder="row number (1-)">
+        <label for="column-num">Column number: </label>
+        <input type="number" v-model="input_column_num" id="column-num" min="1" step="1" placeholder="column number (1-)">
+        <button>Reset</button>
+      </form>
 
+
+      <button @click="row_scaling">Row scaling</button>
+      <button @click="column_scaling">Column scaling</button>
+      <button @click="auto_scaling">Auto {{ auto_status }}</button>
+
+      <div class="counter">Row scaling: {{ row_scaling_num }}</div>
+      <div class="counter">Column scaling: {{ column_scaling_num }}</div>
       <table>
         <tbody>
           <tr v-for="row in matrix">
@@ -25,9 +34,6 @@
           </tr>
         </tbody>
       </table>
-
-      <button @click="row_scaling">Row scaling</button>
-      <button @click="column_scaling">Column scaling</button>
     </div>
 
     <!-- Import Js -->
