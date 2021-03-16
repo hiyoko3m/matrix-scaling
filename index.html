@@ -11,9 +11,9 @@
   <body>
     <div id="app">
       <label for="row-num">Row number: </label>
-      <input type="number" v-model="input_row_num" id="row-num">
+      <input type="number" v-model="input_row_num" id="row-num" min="1" step="1">
       <label for="column-num">Column number: </label>
-      <input type="number" v-model="input_column_num" id="column-num">
+      <input type="number" v-model="input_column_num" id="column-num" min="1" step="1">
       <button @click="reset_matrix">Reset</button>
 
       <table>
