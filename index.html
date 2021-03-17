@@ -10,48 +10,60 @@
   </head>
   <body>
     <div id="app">
-      <form v-on:submit.prevent="clearMatrix">
-        <label for="row-num">Row number: </label>
-        <input type="number" v-model="inputRowNum" id="row-num" min="1" step="1" placeholder="row number (1-)">
-        <label for="column-num">Column number: </label>
-        <input type="number" v-model="inputColumnNum" id="column-num" min="1" step="1" placeholder="column number (1-)">
-        <button>Clear</button>
-      </form>
-
-      <table>
-        <tbody>
-          <tr v-for="(row, rowIndex) in inputMatrix">
-            <td
-              v-for="(value, columnIndex) in row"
-              @click="editInputMatrix(rowIndex, columnIndex, $event)"
-            >
-              {{ value }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <input
-        :style="{ top: editorY + 'px', left: editorX + 'px' }"
-        id="matrix-editor" type="number" min="1" step="1"
+      <div
+        tabindex="0"
+        id="global"
+        @click="escapeGlobal"
+        @keydown.esc="escapeGlobal"
       >
-
-      <button @click="rowScaling">Row scaling</button>
-      <button @click="columnScaling">Column scaling</button>
-      <button @click="toggleAutoScaling">Auto {{ autoStatus === 1 ? "ON" : "OFF" }}</button>
-      <button @click="resetScaling">Reset scaling</button>
-
-      <div class="counter">Row scaling: {{ rowScalingNum }}</div>
-      <div class="counter">Column scaling: {{ columnScalingNum }}</div>
-      <table>
-        <tbody>
-          <tr v-for="row in matrix">
-            <td v-for="value in row">
-              {{ value }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <form v-on:submit.prevent="clearMatrix">
+          <label for="row-num">Row number: </label>
+          <input type="number" v-model="inputRowNum" id="row-num" min="1" step="1" placeholder="row number (1-)">
+          <label for="column-num">Column number: </label>
+          <input type="number" v-model="inputColumnNum" id="column-num" min="1" step="1" placeholder="column number (1-)">
+          <button>Clear</button>
+        </form>
+  
+        <table>
+          <tbody>
+            <tr v-for="(row, rowIndex) in inputMatrix">
+              <td
+                v-for="(value, columnIndex) in row"
+                @click.stop="changeToEdit(rowIndex, columnIndex, $event)"
+              >
+                {{ value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+  
+        <input
+          id="matrix-editor" type="number" min="1" step="1"
+          v-show="isEditing"
+          :style="{ top: editorY + 'px', left: editorX + 'px' }"
+          v-model="editingValue"
+          @keyup.enter="edit"
+          @keyup.esc="escapeFromEdit"
+          @click.stop
+        >
+  
+        <button @click="rowScaling">Row scaling</button>
+        <button @click="columnScaling">Column scaling</button>
+        <button @click="toggleAutoScaling">Auto {{ autoStatus === 1 ? "ON" : "OFF" }}</button>
+        <button @click="resetScaling">Reset scaling</button>
+  
+        <div class="counter">Row scaling: {{ rowScalingNum }}</div>
+        <div class="counter">Column scaling: {{ columnScalingNum }}</div>
+        <table>
+          <tbody>
+            <tr v-for="row in matrix">
+              <td v-for="value in row">
+                {{ value }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Import Js -->

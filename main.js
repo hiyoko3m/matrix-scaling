@@ -18,6 +18,10 @@ const app = Vue.createApp({
             matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             editorX: 0,
             editorY: 0,
+            isEditing: false,
+            editingRowIndex: null,
+            editingColumnIndex: null,
+            editingValue: null,
             
             scalingStatus: INITIAL_STATE,
             rowScalingNum: 0,
@@ -29,6 +33,12 @@ const app = Vue.createApp({
         }
     },
     methods: {
+        escapeGlobal() {
+            if (this.isEditing) {
+                this.escapeFromEdit();
+            }
+        },
+
         // Clear the input matrix and reset the base matrix
         clearMatrix() {
             // Set rowNum and columnNum correctly
@@ -64,19 +74,33 @@ const app = Vue.createApp({
             this.rowScalingNum = 0;
             this.columnScalingNum = 0;
         },
-        // Reset the base matrix to the input matrix
+        // Reset the initial matrix based on the input matrix
         resetMatrix() {
             this.matrix = Array(this.rowNum);
             for (let i = 0; i < this.rowNum; i++) {
                 this.matrix[i] = [...this.inputMatrix[i]];
             }
         },
-        editInputMatrix(rowIndex, columnIndex, event) {
+        changeToEdit(rowIndex, columnIndex, event) {
             console.log("called at " + rowIndex + ", " + columnIndex);
             console.log(event);
 
             this.editorX = event.pageX;
             this.editorY = event.pageY;
+
+            this.isEditing = true;
+            this.editingRowIndex = rowIndex;
+            this.editingColumnIndex = columnIndex;
+            this.editingValue = this.inputMatrix[rowIndex][columnIndex];
+        },
+        escapeFromEdit() {
+            this.isEditing = false;
+        },
+        edit() {
+            this.inputMatrix[this.editingRowIndex][this.editingColumnIndex] = parseInt(this.editingValue);
+            this.escapeFromEdit();
+
+            this.resetScaling();
         },
 
         rowScaling() {
