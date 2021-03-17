@@ -70,7 +70,7 @@ const app = Vue.createApp({
 
             this.resetMatrix();
 
-            this.scalingStatus = INITIALsTATE;
+            this.scalingStatus = INITIAL_STATE;
             this.rowScalingNum = 0;
             this.columnScalingNum = 0;
         },
@@ -82,9 +82,6 @@ const app = Vue.createApp({
             }
         },
         changeToEdit(rowIndex, columnIndex, event) {
-            console.log("called at " + rowIndex + ", " + columnIndex);
-            console.log(event);
-
             this.editorX = event.pageX;
             this.editorY = event.pageY;
 
@@ -92,6 +89,11 @@ const app = Vue.createApp({
             this.editingRowIndex = rowIndex;
             this.editingColumnIndex = columnIndex;
             this.editingValue = this.inputMatrix[rowIndex][columnIndex];
+
+            this.$nextTick(() => {
+                this.$refs.matrixEditor.focus();
+                this.$refs.matrixEditor.select()
+            });
         },
         escapeFromEdit() {
             this.isEditing = false;

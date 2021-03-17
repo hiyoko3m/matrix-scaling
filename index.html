@@ -39,6 +39,7 @@
   
         <input
           id="matrix-editor" type="number" min="1" step="1"
+          ref="matrixEditor"
           v-show="isEditing"
           :style="{ top: editorY + 'px', left: editorX + 'px' }"
           v-model="editingValue"
