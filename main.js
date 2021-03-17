@@ -8,79 +8,79 @@ const AUTO_ON = 1;
 const app = Vue.createApp({
     data() {
         return {
-            input_row_num: "3",
-            row_num: 3,
+            inputRowNum: "3",
+            rowNum: 3,
 
-            input_column_num: "3",
-            column_num: 3,
+            inputColumnNum: "3",
+            columnNum: 3,
 
-            input_matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+            inputMatrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             editorX: 0,
             editorY: 0,
             
-            scaling_status: INITIAL_STATE,
-            row_scaling_num: 0,
-            column_scaling_num: 0,
+            scalingStatus: INITIAL_STATE,
+            rowScalingNum: 0,
+            columnScalingNum: 0,
 
-            auto_status: AUTO_OFF,
-            auto_interval: 1000,
-            auto_id: null,
+            autoStatus: AUTO_OFF,
+            autoInterval: 1000,
+            autoId: null,
         }
     },
     methods: {
         // Clear the input matrix and reset the base matrix
-        clear_matrix() {
-            // Set row_num and column_num correctly
-            // and reflect them back to input_row_num and input_column_num.
-            this.row_num = parseInt(this.input_row_num);
-            if (this.row_num <= 0) {
-                this.row_num = 1;
+        clearMatrix() {
+            // Set rowNum and columnNum correctly
+            // and reflect them back to inputRowNum and inputColumnNum.
+            this.rowNum = parseInt(this.inputRowNum);
+            if (this.rowNum <= 0) {
+                this.rowNum = 1;
             }
-            this.input_row_num = this.row_num;
+            this.inputRowNum = this.rowNum;
 
-            this.column_num = parseInt(this.input_column_num);
-            if (this.column_num <= 0) {
-                this.column_num = 1;
+            this.columnNum = parseInt(this.inputColumnNum);
+            if (this.columnNum <= 0) {
+                this.columnNum = 1;
             }
-            this.input_column_num = this.column_num;
+            this.inputColumnNum = this.columnNum;
 
-            // Initialize `input_matrix` as the identity matrix
-            // if row_num and column_num coincide. Otherwise
+            // Initialize `inputMatrix` as the identity matrix
+            // if rowNum and columnNum coincide. Otherwise
             // initialize as a near identity matrix
             // not to become the sum of each row and column as 0.
-            this.input_matrix = Array(this.row_num);
-            for (let i = 0; i < this.row_num; i++) {
-                this.input_matrix[i] = Array(this.column_num).fill(0);
-                this.input_matrix[i][Math.min(i, this.column_num - 1)] = 1;
+            this.inputMatrix = Array(this.rowNum);
+            for (let i = 0; i < this.rowNum; i++) {
+                this.inputMatrix[i] = Array(this.columnNum).fill(0);
+                this.inputMatrix[i][Math.min(i, this.columnNum - 1)] = 1;
             }
-            for (let i = this.row_num; i < this.column_num; i++) {
-                this.input_matrix[this.row_num - 1][i] = 1;
+            for (let i = this.rowNum; i < this.columnNum; i++) {
+                this.inputMatrix[this.rowNum - 1][i] = 1;
             }
 
-            this.reset_matrix();
+            this.resetMatrix();
 
-            this.scaling_status = INITIAL_STATE;
-            this.row_scaling_num = 0;
-            this.column_scaling_num = 0;
+            this.scalingStatus = INITIALsTATE;
+            this.rowScalingNum = 0;
+            this.columnScalingNum = 0;
         },
         // Reset the base matrix to the input matrix
-        reset_matrix() {
-            this.matrix = Array(this.row_num);
-            for (let i = 0; i < this.row_num; i++) {
-                this.matrix[i] = [...this.input_matrix[i]];
+        resetMatrix() {
+            this.matrix = Array(this.rowNum);
+            for (let i = 0; i < this.rowNum; i++) {
+                this.matrix[i] = [...this.inputMatrix[i]];
             }
         },
-        edit_input_matrix(row_index, column_index, event) {
-            console.log("called at " + row_index + ", " + column_index);
+        editInputMatrix(rowIndex, columnIndex, event) {
+            console.log("called at " + rowIndex + ", " + columnIndex);
             console.log(event);
 
             this.editorX = event.pageX;
             this.editorY = event.pageY;
         },
 
-        row_scaling() {
-            if (this.scaling_status === AFTER_ROW_SCALING) {
+        rowScaling() {
+            if (this.scalingStatus === AFTER_ROW_SCALING) {
                 return;
             }
 
@@ -92,11 +92,11 @@ const app = Vue.createApp({
                 }
             )
 
-            this.scaling_status = AFTER_ROW_SCALING;
-            this.row_scaling_num += 1;
+            this.scalingStatus = AFTER_ROW_SCALING;
+            this.rowScalingNum += 1;
         },
-        column_scaling() {
-            if (this.scaling_status === AFTER_COLUMN_SCALING) {
+        columnScaling() {
+            if (this.scalingStatus === AFTER_COLUMN_SCALING) {
                 return;
             }
 
@@ -109,33 +109,33 @@ const app = Vue.createApp({
                 row => row.map((value, i) => value / s[i])
             );
 
-            this.scaling_status = AFTER_COLUMN_SCALING;
-            this.column_scaling_num += 1;
+            this.scalingStatus = AFTER_COLUMN_SCALING;
+            this.columnScalingNum += 1;
         },
-        toggle_auto_scaling() {
-            if (this.auto_id === null) {
-                this.auto_id = setInterval(() => {
-                    if (this.scaling_status !== AFTER_ROW_SCALING) {
-                        this.row_scaling();
+        toggleAutoScaling() {
+            if (this.autoId === null) {
+                this.autoId = setInterval(() => {
+                    if (this.scalingStatus !== AFTER_ROW_SCALING) {
+                        this.rowScaling();
                     } else {
-                        this.column_scaling();
+                        this.columnScaling();
                     }
-                }, this.auto_interval)
-                this.auto_status = AUTO_ON;
+                }, this.autoInterval)
+                this.autoStatus = AUTO_ON;
             } else {
-                clearInterval(this.auto_id);
-                this.auto_id = null;
-                this.auto_status = AUTO_OFF;
+                clearInterval(this.autoId);
+                this.autoId = null;
+                this.autoStatus = AUTO_OFF;
             }
         },
-        reset_scaling() {
-            if (this.auto_id !== null) {
-                this.toggle_auto_scaling();
+        resetScaling() {
+            if (this.autoId !== null) {
+                this.toggleAutoScaling();
             }
-            this.row_scaling_num = 0;
-            this.column_scaling_num = 0;
+            this.rowScalingNum = 0;
+            this.columnScalingNum = 0;
 
-            this.reset_matrix();
+            this.resetMatrix();
         },
     },
 })
