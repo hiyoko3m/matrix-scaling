@@ -16,6 +16,8 @@ const app = Vue.createApp({
 
             input_matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+            editorX: 0,
+            editorY: 0,
             
             scaling_status: INITIAL_STATE,
             row_scaling_num: 0,
@@ -69,6 +71,13 @@ const app = Vue.createApp({
                 this.matrix[i] = [...this.input_matrix[i]];
             }
         },
+        edit_input_matrix(row_index, column_index, event) {
+            console.log("called at " + row_index + ", " + column_index);
+            console.log(event);
+
+            this.editorX = event.pageX;
+            this.editorY = event.pageY;
+        },
 
         row_scaling() {
             if (this.scaling_status === AFTER_ROW_SCALING) {
@@ -121,12 +130,12 @@ const app = Vue.createApp({
         },
         reset_scaling() {
             if (this.auto_id !== null) {
-                toggle_auto_scaling();
+                this.toggle_auto_scaling();
             }
             this.row_scaling_num = 0;
             this.column_scaling_num = 0;
 
-            reset_matrix();
+            this.reset_matrix();
         },
     },
 })

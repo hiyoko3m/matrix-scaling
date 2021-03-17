@@ -180,3 +180,8 @@ ul {
     width: 90%;
   }
 }
+
+#matrix_editor {
+  position: absolute;
+/*  visibility: hidden;*/
+}

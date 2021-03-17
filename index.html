@@ -18,6 +18,23 @@
         <button>Clear</button>
       </form>
 
+      <table>
+        <tbody>
+          <tr v-for="(row, row_index) in input_matrix">
+            <td
+              v-for="(value, column_index) in row"
+              @click="edit_input_matrix(row_index, column_index, $event)"
+            >
+              {{ value }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <input
+        :style="{ top: editorY + 'px', left: editorX + 'px' }"
+        id="matrix_editor" type="number" min="1" step="1"
+      >
 
       <button @click="row_scaling">Row scaling</button>
       <button @click="column_scaling">Column scaling</button>
