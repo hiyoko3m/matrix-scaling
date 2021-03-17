@@ -51,6 +51,7 @@
         <button @click="rowScaling">Row scaling</button>
         <button @click="columnScaling">Column scaling</button>
         <button @click="toggleAutoScaling">Auto {{ autoStatus === 1 ? "ON" : "OFF" }}</button>
+        <input :value="autoInterval" type="number" min="1" step="1" @input="changeAutoInterval">
         <button @click="resetScaling">Reset scaling</button>
   
         <div class="counter">Row scaling: {{ rowScalingNum }}</div>

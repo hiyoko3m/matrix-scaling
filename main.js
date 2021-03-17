@@ -154,6 +154,14 @@ const app = Vue.createApp({
                 this.autoStatus = AUTO_OFF;
             }
         },
+        changeAutoInterval(event) {
+            this.autoInterval = event.target.value;
+            console.log(this.autoInterval);
+            if (this.autoId !== null) {
+                this.toggleAutoScaling();
+                this.toggleAutoScaling();
+            }
+        },
         resetScaling() {
             if (this.autoId !== null) {
                 this.toggleAutoScaling();
