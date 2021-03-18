@@ -139,7 +139,7 @@ const app = Vue.createApp({
             this.columnScalingNum += 1;
         },
         toggleAutoScaling() {
-            if (this.autoId === null) {
+            if (this.autoStatus === AUTO_OFF) {
                 this.autoId = setInterval(() => {
                     if (this.scalingStatus !== AFTER_ROW_SCALING) {
                         this.rowScaling();
@@ -157,19 +157,29 @@ const app = Vue.createApp({
         changeAutoInterval(event) {
             this.autoInterval = event.target.value;
             console.log(this.autoInterval);
-            if (this.autoId !== null) {
+            if (this.autoStatus === AUTO_ON) {
                 this.toggleAutoScaling();
                 this.toggleAutoScaling();
             }
         },
         resetScaling() {
-            if (this.autoId !== null) {
+            if (this.autoStatus === AUTO_ON) {
                 this.toggleAutoScaling();
             }
             this.rowScalingNum = 0;
             this.columnScalingNum = 0;
 
             this.resetMatrix();
+        },
+    },
+    computed: {
+        canRowScale() {
+            return this.autoStatus === AUTO_OFF
+                && this.scalingStatus !== AFTER_ROW_SCALING;
+        },
+        canColumnScale() {
+            return this.autoStatus === AUTO_OFF
+                && this.scalingStatus !== AFTER_COLUMN_SCALING;
         },
     },
 })

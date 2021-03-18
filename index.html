@@ -12,30 +12,33 @@
     <div id="app">
       <div
         tabindex="0"
-        id="global"
+        class="container"
         @click="escapeGlobal"
         @keydown.esc="escapeGlobal"
       >
-        <form v-on:submit.prevent="clearMatrix">
-          <label for="row-num">Row number: </label>
-          <input type="number" v-model="inputRowNum" id="row-num" min="1" step="1" placeholder="row number (1-)">
-          <label for="column-num">Column number: </label>
-          <input type="number" v-model="inputColumnNum" id="column-num" min="1" step="1" placeholder="column number (1-)">
-          <button>Clear</button>
-        </form>
-  
-        <table>
-          <tbody>
-            <tr v-for="(row, rowIndex) in inputMatrix">
-              <td
-                v-for="(value, columnIndex) in row"
-                @click.stop="changeToEdit(rowIndex, columnIndex, $event)"
-              >
-                {{ value }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="editor">
+          <h2>Matrix setting</h2>
+          <form v-on:submit.prevent="clearMatrix">
+            <label for="row-num">Row number: </label>
+            <input type="number" v-model="inputRowNum" id="row-num" min="1" step="1" placeholder="row number (1-)">
+            <label for="column-num">Column number: </label>
+            <input type="number" v-model="inputColumnNum" id="column-num" min="1" step="1" placeholder="column number (1-)">
+            <button>Reset</button>
+          </form>
+    
+          <table>
+            <tbody>
+              <tr v-for="(row, rowIndex) in inputMatrix">
+                <td
+                  v-for="(value, columnIndex) in row"
+                  @click.stop="changeToEdit(rowIndex, columnIndex, $event)"
+                >
+                  {{ value }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
   
         <input
           id="matrix-editor" type="number" min="1" step="1"
@@ -48,23 +51,38 @@
           @click.stop
         >
   
-        <button @click="rowScaling">Row scaling</button>
-        <button @click="columnScaling">Column scaling</button>
-        <button @click="toggleAutoScaling">Auto {{ autoStatus === 1 ? "ON" : "OFF" }}</button>
-        <input :value="autoInterval" type="number" min="1" step="1" @input="changeAutoInterval">
-        <button @click="resetScaling">Reset scaling</button>
-  
-        <div class="counter">Row scaling: {{ rowScalingNum }}</div>
-        <div class="counter">Column scaling: {{ columnScalingNum }}</div>
-        <table>
-          <tbody>
-            <tr v-for="row in matrix">
-              <td v-for="value in row">
-                {{ value }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <hr>
+
+        <div class="scaling">
+          <h2>Matrix scaling</h2>
+          <div class="auto">
+            <button @click="toggleAutoScaling">{{autoStatus === 1 ? "\u{23F8}" : "\u{23F5}" }}</button>
+            <button @click="resetScaling">&#x23F9;</button>
+            <label for="interval">
+              Interval: 
+            </label>
+            <input id="interval" :value="autoInterval" type="number" min="1" step="1" @input="changeAutoInterval">
+          </div>
+          <div class="manual">
+            Manual: 
+            <button @click="rowScaling" :disabled="!canRowScale">Row scaling</button>
+            <button @click="columnScaling" :disabled="!canColumnScale">Column scaling</button>
+          </div>
+    
+          <div class="result">
+            <div class="counter">{{ rowScalingNum }} row scalings</div>
+            <div class="counter">{{ columnScalingNum }} column scalings</div>
+           <table>
+             <tbody>
+               <tr v-for="row in matrix">
+                 <td v-for="value in row">
+                   {{ value }}
+                 </td>
+               </tr>
+             </tbody>
+           </table>
+          </div>
+        </div>
       </div>
     </div>
 
