@@ -23,9 +23,10 @@
             <input type="number" v-model="inputRowNum" id="row-num" min="1" step="1" placeholder="row number (1-)">
             <label for="column-num">Column number: </label>
             <input type="number" v-model="inputColumnNum" id="column-num" min="1" step="1" placeholder="column number (1-)">
-            <button>Reset</button>
+            <button>Initialize</button>
           </form>
     
+          <p>Click cells to edit corresponding values:</p>
           <table>
             <tbody>
               <tr v-for="(row, rowIndex) in inputMatrix">

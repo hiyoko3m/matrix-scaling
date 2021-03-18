@@ -23,6 +23,11 @@ h2 {
   margin-left: 5px;
 }
 
+.editor p {
+  margin-left: 5px;
+  font-size: 15px;
+}
+
 input {
   font-size: 16px;
   width: 50px;
