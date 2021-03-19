@@ -28,7 +28,8 @@ const app = Vue.createApp({
             columnScalingNum: 0,
 
             autoStatus: AUTO_OFF,
-            autoInterval: 1000,
+            autoInterval: 100,
+            autoIntervalSlider: 1,
             autoId: null,
 
             resultPrecision: 5,
@@ -158,6 +159,14 @@ const app = Vue.createApp({
         },
         changeAutoInterval(event) {
             this.autoInterval = event.target.value;
+            if (this.autoStatus === AUTO_ON) {
+                this.toggleAutoScaling();
+                this.toggleAutoScaling();
+            }
+        },
+        changeAutoIntervalSlider(event) {
+            this.autoIntervalSlider = event.target.value;
+            this.autoInterval = [10, 100, 1000][this.autoIntervalSlider];
             if (this.autoStatus === AUTO_ON) {
                 this.toggleAutoScaling();
                 this.toggleAutoScaling();

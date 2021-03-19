@@ -62,7 +62,9 @@
             <label for="interval">
               Interval: 
             </label>
+            <input type="range" id="interval_slider" :value="autoIntervalSlider" min="0" max="2" step="1" @input="changeAutoIntervalSlider">
             <input id="interval" :value="autoInterval" type="number" min="1" step="1" @input="changeAutoInterval">
+            ms
           </div>
           <div class="manual">
             Manual: 
