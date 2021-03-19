@@ -46,7 +46,11 @@ table {
 }
 
 td {
-  width: 30px;
+  width: 40px;
+}
+
+.result td {
+  width: 100px;
 }
 
 .auto {

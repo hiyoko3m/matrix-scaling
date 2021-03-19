@@ -30,6 +30,8 @@ const app = Vue.createApp({
             autoStatus: AUTO_OFF,
             autoInterval: 1000,
             autoId: null,
+
+            resultPrecision: 5,
         }
     },
     methods: {

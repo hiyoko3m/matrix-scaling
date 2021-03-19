@@ -26,7 +26,7 @@
             <button>Initialize</button>
           </form>
     
-          <p>Click cells to edit corresponding values:</p>
+          <p>Click cells to edit corresponding values (after editing press enter key):</p>
           <table>
             <tbody>
               <tr v-for="(row, rowIndex) in inputMatrix">
@@ -77,7 +77,7 @@
              <tbody>
                <tr v-for="row in matrix">
                  <td v-for="value in row">
-                   {{ value }}
+                   {{ value === 0 ? 0 : (value < 0.01 ? value.toExponential(resultPrecision - 1) : value.toPrecision(resultPrecision)) }}
                  </td>
                </tr>
              </tbody>
