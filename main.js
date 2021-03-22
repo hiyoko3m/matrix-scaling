@@ -173,6 +173,7 @@ const app = Vue.createApp({
             if (this.autoStatus === AUTO_ON) {
                 this.toggleAutoScaling();
             }
+            this.scalingStatus = INITIAL_STATE;
             this.rowScalingNum = 0;
             this.columnScalingNum = 0;
 
