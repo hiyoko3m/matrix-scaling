@@ -8,6 +8,7 @@ const AUTO_ON = 1;
 const app = Vue.createApp({
     data() {
         return {
+            // for input
             inputRowNum: "3",
             rowNum: 3,
 
@@ -22,6 +23,7 @@ const app = Vue.createApp({
             editingColumnIndex: null,
             editingValue: null,
             
+            // for matrix scaling
             matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
 
             scalingStatus: INITIAL_STATE,
@@ -33,6 +35,11 @@ const app = Vue.createApp({
             autoIntervalSlider: 1,
             autoId: null,
 
+            // for symmetric capacity
+            leftVar: [1, 1, 1],
+            rightVar: [1, 1, 1],
+
+            // for visualizing
             resultPrecision: 5,
         }
     },
@@ -205,6 +212,30 @@ const app = Vue.createApp({
                 Array(this.matrix[0].length).fill(0)
             );
         },
+        leftCoef() {
+            prod = this.inputMatrix.map(
+                row => row.reduce(
+                    (sum, x, i) => sum + x * this.rightVar[i],
+                    0
+                )
+            );
+            lagrangeCoef = Math.pow(prod.reduce((mul, x) => mul * x, 1), 1 / this.inputMatrix.length);
+            return this.leftVar.map(
+                (x, i) => (lagrangeCoef / prod[i]) / x
+            );
+        },
+        rightCoef() {
+            prod = this.inputMatrix.reduce(
+                (acc, row, i) => acc.map(
+                    (val, j) => val + row[j] * this.leftVar[i]
+                ),
+                Array(this.inputMatrix[0].length).fill(0)
+            );
+            lagrangeCoef = Math.pow(prod.reduce((mul, x) => mul * x, 1), 1 / this.inputMatrix[0].length);
+            return this.rightVar.map(
+                (x, i) => (lagrangeCoef / prod[i]) / x
+            );
+        }
     },
 })
 
