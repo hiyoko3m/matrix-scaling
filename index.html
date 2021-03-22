@@ -57,13 +57,13 @@
         <div class="scaling">
           <h2>Matrix scaling</h2>
           <div class="auto">
-            <button @click="toggleAutoScaling">{{autoStatus === 1 ? "\u{23F8}" : "\u{23F5}" }}</button>
+            <button @click="toggleAutoScaling">{{autoScalingStatus === AUTO_ON ? "\u{23F8}" : "\u{23F5}" }}</button>
             <button @click="resetScaling">&#x23F9;</button>
             <label for="interval">
               Interval: 
             </label>
-            <input type="range" id="interval_slider" :value="autoIntervalSlider" min="0" max="2" step="1" @input="changeAutoIntervalSlider">
-            <input id="interval" :value="autoInterval" type="number" min="1" step="1" @input="changeAutoInterval">
+            <input type="range" id="interval-slider" :value="autoScalingIntervalSlider" min="0" max="2" step="1" @input="changeAutoScalingIntervalSlider">
+            <input id="interval" :value="autoScalingInterval" type="number" min="1" step="1" @input="changeAutoScalingInterval">
             ms
           </div>
           <div class="manual">
@@ -101,13 +101,13 @@
 
         <div class="sym-capacity">
           <div class="auto">
-            <button @click="toggleAutoScaling">{{autoStatus === 1 ? "\u{23F8}" : "\u{23F5}" }}</button>
-            <button @click="resetScaling">&#x23F9;</button>
+            <button @click="toggleAutoSymCap">{{autoSymCapStatus === AUTO_ON ? "\u{23F8}" : "\u{23F5}" }}</button>
+            <button @click="resetSymCap">&#x23F9;</button>
             <label for="interval">
               Interval: 
             </label>
-            <input type="range" id="interval_slider" :value="autoIntervalSlider" min="0" max="2" step="1" @input="changeAutoIntervalSlider">
-            <input id="interval" :value="autoInterval" type="number" min="1" step="1" @input="changeAutoInterval">
+            <input type="range" id="interval-slider" :value="autoSymCapIntervalSlider" min="0" max="2" step="1" @input="changeAutoSymCapIntervalSlider">
+            <input id="interval" :value="autoSymCapInterval" type="number" min="1" step="1" @input="changeAutoSymCapInterval">
             ms
           </div>
 
