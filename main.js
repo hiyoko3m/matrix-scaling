@@ -173,6 +173,15 @@ const app = Vue.createApp({
 
             this.resetMatrix();
         },
+        valueFormat(value) {
+           if (value === 0) {
+               return 0;
+           } else if (value < 0.01) {
+               return value.toExponential(this.resultPrecision - 1);
+           } else {
+               return value.toPrecision(this.resultPrecision);
+           }
+       },
     },
     computed: {
         canRowScale() {
