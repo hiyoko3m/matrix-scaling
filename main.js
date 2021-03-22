@@ -33,10 +33,10 @@ const app = Vue.createApp({
             rowScalingNum: 0,
             columnScalingNum: 0,
 
-            autoStatus: AUTO_OFF,
-            autoInterval: 100,
-            autoIntervalSlider: 1,
-            autoId: null,
+            autoScalingStatus: AUTO_OFF,
+            autoScalingInterval: 100,
+            autoScalingIntervalSlider: 1,
+            autoScalingId: null,
 
             // for symmetric capacity
             leftVar: [1, 1, 1],
@@ -45,6 +45,11 @@ const app = Vue.createApp({
             symcapStatus: INITIAL_STATE,
             updateLeftVarNum: 0,
             updateRightVarNum: 0,
+
+            autoSymCapStatus: AUTO_OFF,
+            autoSymCapInterval: 100,
+            autoSymCapIntervalSlider: 1,
+            autoSymCapId: null,
 
             // for visualizing
             resultPrecision: 5,
@@ -146,38 +151,38 @@ const app = Vue.createApp({
             this.columnScalingNum += 1;
         },
         toggleAutoScaling() {
-            if (this.autoStatus === AUTO_OFF) {
-                this.autoId = setInterval(() => {
+            if (this.autoScalingStatus === AUTO_OFF) {
+                this.autoScalingId = setInterval(() => {
                     if (this.scalingStatus !== AFTER_ROW_SCALING) {
                         this.rowScaling();
                     } else {
                         this.columnScaling();
                     }
-                }, this.autoInterval)
-                this.autoStatus = AUTO_ON;
+                }, this.autoScalingInterval)
+                this.autoScalingStatus = AUTO_ON;
             } else {
-                clearInterval(this.autoId);
-                this.autoId = null;
-                this.autoStatus = AUTO_OFF;
+                clearInterval(this.autoScalingId);
+                this.autoScalingId = null;
+                this.autoScalingStatus = AUTO_OFF;
             }
         },
-        changeAutoInterval(event) {
-            this.autoInterval = event.target.value;
-            if (this.autoStatus === AUTO_ON) {
+        changeAutoScalingInterval(event) {
+            this.autoScalingInterval = event.target.value;
+            if (this.autoScalingStatus === AUTO_ON) {
                 this.toggleAutoScaling();
                 this.toggleAutoScaling();
             }
         },
-        changeAutoIntervalSlider(event) {
-            this.autoIntervalSlider = event.target.value;
-            this.autoInterval = [10, 100, 1000][this.autoIntervalSlider];
-            if (this.autoStatus === AUTO_ON) {
+        changeAutoScalingIntervalSlider(event) {
+            this.autoScalingIntervalSlider = event.target.value;
+            this.autoScalingInterval = [10, 100, 1000][this.autoScalingIntervalSlider];
+            if (this.autoScalingStatus === AUTO_ON) {
                 this.toggleAutoScaling();
                 this.toggleAutoScaling();
             }
         },
         resetScaling() {
-            if (this.autoStatus === AUTO_ON) {
+            if (this.autoScalingStatus === AUTO_ON) {
                 this.toggleAutoScaling();
             }
             this.scalingStatus = INITIAL_STATE;
@@ -185,15 +190,6 @@ const app = Vue.createApp({
             this.columnScalingNum = 0;
 
             this.resetMatrix();
-        },
-
-        resetSymCap() {
-            this.symcapStatus = INITIAL_STATE;
-            this.updateLeftVarNum = 0;
-            this.updateRightVarNum = 0;
-
-            this.leftVar = Array(this.rowNum).fill(1);
-            this.rightVar = Array(this.columnNum).fill(1);
         },
 
         updateLeftVar() {
@@ -220,6 +216,45 @@ const app = Vue.createApp({
             this.symcapStatus = AFTER_RIGHT;
             this.updateRightVarNum += 1;
         },
+        toggleAutoSymCap() {
+            if (this.autoSymCapStatus === AUTO_OFF) {
+                this.autoSymCapId = setInterval(() => {
+                    if (this.symcapStatus !== AFTER_LEFT) {
+                        this.updateLeftVar();
+                    } else {
+                        this.updateRightVar();
+                    }
+                }, this.autoSymCapInterval)
+                this.autoSymCapStatus = AUTO_ON;
+            } else {
+                clearInterval(this.autoSymCapId);
+                this.autoSymCapId = null;
+                this.autoSymCapStatus = AUTO_OFF;
+            }
+        },
+        changeAutoSymCapInterval(event) {
+            this.autoSymCapInterval = event.target.value;
+            if (this.autoSymCapStatus === AUTO_ON) {
+                this.toggleAutoSymCap();
+                this.toggleAutoSymCap();
+            }
+        },
+        changeAutoSymCapIntervalSlider(event) {
+            this.autoSymCapIntervalSlider = event.target.value;
+            this.autoSymCapInterval = [10, 100, 1000][this.autoSymCapIntervalSlider];
+            if (this.autoSymCapStatus === AUTO_ON) {
+                this.toggleAutoSymCap();
+                this.toggleAutoSymCap();
+            }
+        },
+        resetSymCap() {
+            this.symcapStatus = INITIAL_STATE;
+            this.updateLeftVarNum = 0;
+            this.updateRightVarNum = 0;
+
+            this.leftVar = Array(this.rowNum).fill(1);
+            this.rightVar = Array(this.columnNum).fill(1);
+        },
 
         valueFormat(value) {
            if (value === 0) {
@@ -232,12 +267,22 @@ const app = Vue.createApp({
        },
     },
     computed: {
+        INITIAL_STATE() { return 0 },
+        AFTER_ROW_SCALING() { return 1 },
+        AFTER_COLUMN_SCALING() { return -1 },
+
+        AFTER_LEFT() { return 1 },
+        AFTER_RIGHT() { return -1 },
+
+        AUTO_OFF() { return 0 },
+        AUTO_ON() { return 1 },
+
         canRowScale() {
-            return this.autoStatus === AUTO_OFF
+            return this.autoScalingStatus === AUTO_OFF
                 && this.scalingStatus !== AFTER_ROW_SCALING;
         },
         canColumnScale() {
-            return this.autoStatus === AUTO_OFF
+            return this.autoScalingStatus === AUTO_OFF
                 && this.scalingStatus !== AFTER_COLUMN_SCALING;
         },
         rowSum() {
@@ -255,11 +300,11 @@ const app = Vue.createApp({
         },
 
         upgradableLeft() {
-            return this.autoStatus === AUTO_OFF
+            return this.autoSymCapStatus === AUTO_OFF
                 && this.symcapStatus !== AFTER_LEFT;
         },
         upgradableRight() {
-            return this.autoStatus === AUTO_OFF
+            return this.autoSymCapStatus === AUTO_OFF
                 && this.symcapStatus !== AFTER_RIGHT;
         },
         leftCoef() {
