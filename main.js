@@ -15,7 +15,6 @@ const app = Vue.createApp({
             columnNum: 3,
 
             inputMatrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
-            matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
             editorX: 0,
             editorY: 0,
             isEditing: false,
@@ -23,6 +22,8 @@ const app = Vue.createApp({
             editingColumnIndex: null,
             editingValue: null,
             
+            matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+
             scalingStatus: INITIAL_STATE,
             rowScalingNum: 0,
             columnScalingNum: 0,
@@ -114,12 +115,8 @@ const app = Vue.createApp({
             }
 
             this.matrix = this.matrix.map(
-                row => {
-                    // The `s` is the sum of each row.
-                    const s = row.reduce((sum, value) => sum + value, 0);
-                    return row.map(x => x / s);
-                }
-            )
+                (row, i) => row.map(x => x / this.rowSum[i])
+            );
 
             this.scalingStatus = AFTER_ROW_SCALING;
             this.rowScalingNum += 1;
@@ -129,13 +126,8 @@ const app = Vue.createApp({
                 return;
             }
 
-            // The `s` is the array having the sum of each column.
-            const s = this.matrix.reduce(
-                (sum, row) => sum.map((x, i) => x + row[i]),
-                Array(this.matrix[0].length).fill(0)
-            );
             this.matrix = this.matrix.map(
-                row => row.map((value, i) => value / s[i])
+                row => row.map((value, i) => value / this.columnSum[i])
             );
 
             this.scalingStatus = AFTER_COLUMN_SCALING;
@@ -190,6 +182,19 @@ const app = Vue.createApp({
         canColumnScale() {
             return this.autoStatus === AUTO_OFF
                 && this.scalingStatus !== AFTER_COLUMN_SCALING;
+        },
+        rowSum() {
+            return this.matrix.map(
+                row => {
+                    return row.reduce((sum, value) => sum + value, 0);
+                }
+            )
+        },
+        columnSum() {
+            return this.matrix.reduce(
+                (sum, row) => sum.map((x, i) => x + row[i]),
+                Array(this.matrix[0].length).fill(0)
+            );
         },
     },
 })
