@@ -75,15 +75,19 @@
           <div class="result">
             <div class="counter">{{ rowScalingNum }} row scalings</div>
             <div class="counter">{{ columnScalingNum }} column scalings</div>
-           <table>
-             <tbody>
-               <tr v-for="row in matrix">
-                 <td v-for="value in row">
-                   {{ value === 0 ? 0 : (value < 0.01 ? value.toExponential(resultPrecision - 1) : value.toPrecision(resultPrecision)) }}
-                 </td>
-               </tr>
-             </tbody>
-           </table>
+
+            <p>{{ rowSum }}</p>
+            <p>{{ columnSum }}</p>
+
+            <table>
+              <tbody>
+                <tr v-for="row in matrix">
+                  <td v-for="value in row">
+                    {{ value === 0 ? 0 : (value < 0.01 ? value.toExponential(resultPrecision - 1) : value.toPrecision(resultPrecision)) }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
