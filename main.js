@@ -2,6 +2,9 @@ const INITIAL_STATE = 0;
 const AFTER_ROW_SCALING = 1;
 const AFTER_COLUMN_SCALING = -1;
 
+const AFTER_LEFT = 1;
+const AFTER_RIGHT = -1;
+
 const AUTO_OFF = 0;
 const AUTO_ON = 1;
 
@@ -38,6 +41,10 @@ const app = Vue.createApp({
             // for symmetric capacity
             leftVar: [1, 1, 1],
             rightVar: [1, 1, 1],
+
+            symcapStatus: INITIAL_STATE,
+            updateLeftVarNum: 0,
+            updateRightVarNum: 0,
 
             // for visualizing
             resultPrecision: 5,
@@ -181,8 +188,37 @@ const app = Vue.createApp({
         },
 
         resetSymCap() {
+            this.symcapStatus = INITIAL_STATE;
+            this.updateLeftVarNum = 0;
+            this.updateRightVarNum = 0;
+
             this.leftVar = Array(this.rowNum).fill(1);
             this.rightVar = Array(this.columnNum).fill(1);
+        },
+
+        updateLeftVar() {
+            if (this.symcapStatus === AFTER_LEFT) {
+                return;
+            }
+
+            this.leftVar = this.leftVar.map(
+                (x, i) => x * this.leftCoef[i]
+            );
+
+            this.symcapStatus = AFTER_LEFT;
+            this.updateLeftVarNum += 1;
+        },
+        updateRightVar() {
+            if (this.symcapStatus === AFTER_RIGHT) {
+                return;
+            }
+
+            this.rightVar = this.rightVar.map(
+                (x, i) => x * this.rightCoef[i]
+            );
+
+            this.symcapStatus = AFTER_RIGHT;
+            this.updateRightVarNum += 1;
         },
 
         valueFormat(value) {
@@ -216,6 +252,15 @@ const app = Vue.createApp({
                 (sum, row) => sum.map((x, i) => x + row[i]),
                 Array(this.matrix[0].length).fill(0)
             );
+        },
+
+        upgradableLeft() {
+            return this.autoStatus === AUTO_OFF
+                && this.symcapStatus !== AFTER_LEFT;
+        },
+        upgradableRight() {
+            return this.autoStatus === AUTO_OFF
+                && this.symcapStatus !== AFTER_RIGHT;
         },
         leftCoef() {
             prod = this.inputMatrix.map(
