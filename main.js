@@ -79,11 +79,8 @@ const app = Vue.createApp({
                 this.inputMatrix[this.rowNum - 1][i] = 1;
             }
 
-            this.resetMatrix();
-
-            this.scalingStatus = INITIAL_STATE;
-            this.rowScalingNum = 0;
-            this.columnScalingNum = 0;
+            this.resetScaling();
+            this.resetSymCap();
         },
         // Reset the initial matrix based on the input matrix
         resetMatrix() {
@@ -114,6 +111,7 @@ const app = Vue.createApp({
             this.escapeFromEdit();
 
             this.resetScaling();
+            this.resetSymCap();
         },
 
         rowScaling() {
@@ -180,6 +178,12 @@ const app = Vue.createApp({
 
             this.resetMatrix();
         },
+
+        resetSymCap() {
+            this.leftVar = Array(this.rowNum).fill(1);
+            this.rightVar = Array(this.columnNum).fill(1);
+        },
+
         valueFormat(value) {
            if (value === 0) {
                return 0;
