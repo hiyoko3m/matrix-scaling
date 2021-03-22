@@ -52,8 +52,24 @@ td {
   width: 40px;
 }
 
-.result td {
+.result table {
+  border-collapse: separate;
+  border-spacing: 0 2px;
+}
+
+.column-sum td {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.row-sum {
+  font-size: 14px;
+  vertical-align: middle;
   width: 100px;
+}
+
+.result .value {
+  width: 120px;
 }
 
 .auto {
