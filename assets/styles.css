@@ -15,29 +15,6 @@ h2 {
   font-weight: bold;
 }
 
-.editor {
-  margin-bottom: 20px;
-}
-
-.editor label {
-  margin-left: 5px;
-}
-
-.editor p {
-  margin-left: 5px;
-  font-size: 15px;
-}
-
-input {
-  font-size: 16px;
-  width: 50px;
-  height: 30px;
-}
-
-.editor input {
-  margin-right: 10px;
-}
-
 label {
   font-size: 16px;
   margin-bottom: 5px;
@@ -52,7 +29,67 @@ td {
   width: 40px;
 }
 
-.result table {
+input {
+  font-size: 16px;
+  width: 50px;
+  height: 30px;
+}
+
+#editor {
+  margin-bottom: 20px;
+}
+
+#editor label {
+  margin-left: 5px;
+}
+
+#editor p {
+  margin-left: 5px;
+  font-size: 15px;
+}
+
+#editor input {
+  margin-right: 10px;
+}
+
+#matrix-editor {
+  position: absolute;
+}
+
+.auto {
+  margin-left: 5px;
+  padding: auto 0;
+}
+
+.auto button {
+  margin-right: 5px;
+}
+
+.auto label {
+  margin-left: 5px;
+}
+
+.interval-slider {
+  vertical-align: middle;
+}
+
+.manual {
+  margin: 5px 0px 0px 5px;
+}
+
+.manual button {
+  margin-right: 5px;
+}
+
+.manual label {
+  margin-left: 5px;
+}
+
+.result-scaling {
+  margin: 10px 0 0 5px;
+}
+
+.result-scaling table {
   border-collapse: separate;
   border-spacing: 0 2px;
 }
@@ -60,6 +97,7 @@ td {
 .column-sum td {
   font-size: 14px;
   margin-bottom: 5px;
+  width: 120px;
 }
 
 .row-sum {
@@ -68,35 +106,21 @@ td {
   width: 100px;
 }
 
-.result .value {
+.result-symcap {
+  margin: 10px 0 150px 5px;
+}
+
+.result-symcap table {
+  float: left;
+}
+
+.result-symcap caption {
+  font-weight: normal;
+  font-size: 14px;
+}
+
+.result-symcap td {
   width: 120px;
 }
 
-.auto {
-  margin-left: 5px;
-  padding: auto 0;
-}
 
-#interval-slider {
-  vertical-align: middle;
-}
-
-.manual {
-  margin: 5px 0px 0px 5px;
-}
-
-.scaling button {
-  margin-right: 5px;
-}
-
-.scaling label {
-  margin-left: 5px;
-}
-
-.result {
-  margin: 10px 0 0 5px;
-}
-
-#matrix-editor {
-  position: absolute;
-}

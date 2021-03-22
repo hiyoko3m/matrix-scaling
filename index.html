@@ -16,7 +16,7 @@
         @click="escapeGlobal"
         @keydown.esc="escapeGlobal"
       >
-        <div class="editor">
+        <div id="editor">
           <h2>Matrix setting</h2>
           <form v-on:submit.prevent="clearMatrix">
             <label for="row-num">Row number: </label>
@@ -54,7 +54,7 @@
   
         <hr>
 
-        <div class="scaling">
+        <div id="scaling">
           <h2>Matrix scaling</h2>
           <div class="auto">
             <button @click="toggleAutoScaling">{{autoScalingStatus === AUTO_ON ? "\u{23F8}" : "\u{23F5}" }}</button>
@@ -62,7 +62,7 @@
             <label for="interval">
               Interval: 
             </label>
-            <input type="range" id="interval-slider" :value="autoScalingIntervalSlider" min="0" max="2" step="1" @input="changeAutoScalingIntervalSlider">
+            <input type="range" class="interval-slider" :value="autoScalingIntervalSlider" min="0" max="2" step="1" @input="changeAutoScalingIntervalSlider">
             <input id="interval" :value="autoScalingInterval" type="number" min="1" step="1" @input="changeAutoScalingInterval">
             ms
           </div>
@@ -72,7 +72,7 @@
             <button @click="columnScaling" :disabled="!canColumnScale">Column scaling</button>
           </div>
     
-          <div class="result">
+          <div class="result-scaling">
             <div class="counter">{{ rowScalingNum }} row scalings</div>
             <div class="counter">{{ columnScalingNum }} column scalings</div>
 
@@ -86,8 +86,8 @@
                 </tr>
                 <tr v-for="(row, index) in matrix">
                   <td class="row-sum">{{ valueFormat(rowSum[index]) }}</td>
-                  <td class="value" v-for="value in row">
-                    {{ value === 0 ? 0 : (value < 0.01 ? value.toExponential(resultPrecision - 1) : value.toPrecision(resultPrecision)) }}
+                  <td v-for="value in row">
+                    {{ valueFormat(value) }}
                   </td>
                 </tr>
               </tbody>
@@ -99,35 +99,72 @@
 
         <h2>Symmetric capacity</h2>
 
-        <div class="sym-capacity">
+        <p>Compute symmetric capacity (min yAx s.t. ...) by alternating optimization.</p>
+
+        <div id="sym-capacity">
           <div class="auto">
             <button @click="toggleAutoSymCap">{{autoSymCapStatus === AUTO_ON ? "\u{23F8}" : "\u{23F5}" }}</button>
             <button @click="resetSymCap">&#x23F9;</button>
             <label for="interval">
               Interval: 
             </label>
-            <input type="range" id="interval-slider" :value="autoSymCapIntervalSlider" min="0" max="2" step="1" @input="changeAutoSymCapIntervalSlider">
+            <input type="range" class="interval-slider" :value="autoSymCapIntervalSlider" min="0" max="2" step="1" @input="changeAutoSymCapIntervalSlider">
             <input id="interval" :value="autoSymCapInterval" type="number" min="1" step="1" @input="changeAutoSymCapInterval">
             ms
           </div>
 
           <div class="manual">
             Manual: 
-            <button @click="updateLeftVar" :disabled="!upgradableLeft">Update left variable</button>
-            <button @click="updateRightVar" :disabled="!upgradableRight">Update right variable</button>
+            <button @click="updateLeftVar" :disabled="!upgradableLeft">Update y &#x2190; yv</button>
+            <button @click="updateRightVar" :disabled="!upgradableRight">Update ux &#x2192; x</button>
           </div>
 
-          <div class="result">
-            <div class="counter">left: {{ updateLeftVarNum }} times</div>
-            <div class="counter">right: {{ updateRightVarNum }} times</div>
-            <p>leftVar: {{ leftVar }}</p>
-            <p>rightVar: {{ rightVar }}</p>
-            <p>leftCoef: {{ leftCoef }}</p>
-            <p>rightCoef: {{ rightCoef }}</p>
+          <div class="result-symcap">
+            <div class="counter">y updated: {{ updateLeftVarNum }} times</div>
+            <div class="counter">x updated: {{ updateRightVarNum }} times</div>
+            <table>
+              <caption>y</caption>
+              <tbody>
+                <tr v-for="val in leftVar">
+                  <td>{{ valueFormat(val) }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table>
+              <caption>v</caption>
+              <tbody>
+                <tr v-for="val in leftCoef">
+                  <td>{{ valueFormat(val) }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table>
+              <caption>u</caption>
+              <tbody>
+                <tr v-for="val in rightCoef">
+                  <td>{{ valueFormat(val) }}</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <table>
+              <caption>x</caption>
+              <tbody>
+                <tr v-for="val in rightVar">
+                  <td>{{ valueFormat(val) }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
     </div>
+
+    <footer>
+      <div class="container"></div>
+    </footer>
 
     <!-- Import Js -->
     <script src="./main.js"></script>
