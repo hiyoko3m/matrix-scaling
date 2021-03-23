@@ -108,6 +108,7 @@ const app = Vue.createApp({
 
             reader.onload = () => {
                 let lines = reader.result.split("\n");
+                this.inputFileMessage = "";
 
                 let header = lines[0].split(",");
                 this.rowNum = parseInt(header[0]);
