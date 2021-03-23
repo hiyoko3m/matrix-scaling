@@ -109,6 +109,7 @@ input {
 .result-scaling table {
   border-collapse: separate;
   border-spacing: 0 2px;
+  margin-bottom: 9px;
 }
 
 .column-sum td {
