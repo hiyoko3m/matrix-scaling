@@ -31,6 +31,7 @@ const app = Vue.createApp({
             
             // for matrix scaling
             matrix: [[1, 0, 0], [0, 1, 0], [0, 0, 1]],
+            historyScaling: [[1, 0, 0, 0, 1, 0, 0, 0, 1]],
 
             scalingStatus: INITIAL_STATE,
             rowScalingNum: 0,
@@ -176,6 +177,9 @@ const app = Vue.createApp({
             for (let i = 0; i < this.rowNum; i++) {
                 this.matrix[i] = [...this.inputMatrix[i]];
             }
+
+            this.historyScaling = [];
+            this.pushHistoryScaling();
         },
         changeToEdit(rowIndex, columnIndex, event) {
             this.editorX = event.pageX;
@@ -213,6 +217,8 @@ const app = Vue.createApp({
 
             this.scalingStatus = AFTER_ROW_SCALING;
             this.rowScalingNum += 1;
+
+            this.pushHistoryScaling();
         },
         columnScaling() {
             if (this.scalingStatus === AFTER_COLUMN_SCALING) {
@@ -225,6 +231,8 @@ const app = Vue.createApp({
 
             this.scalingStatus = AFTER_COLUMN_SCALING;
             this.columnScalingNum += 1;
+
+            this.pushHistoryScaling();
         },
         toggleAutoScaling() {
             if (this.autoScalingStatus === AUTO_OFF) {
@@ -266,6 +274,34 @@ const app = Vue.createApp({
             this.columnScalingNum = 0;
 
             this.resetMatrix();
+        },
+        pushHistoryScaling() {
+            let new_history = Array(this.rowNum * this.columnNum);
+            for (let i = 0; i < this.rowNum; i++) {
+                for (let j = 0; j < this.columnNum; j++) {
+                    new_history[i * this.columnNum + j] = this.matrix[i][j];
+                }
+            }
+            this.historyScaling.push(new_history);
+        },
+        downloadScaling() {
+            const blob = new Blob([
+                this.historyScaling
+                    .map(history => history.join(','))
+                    .join('\n')
+            ], { "type" : "text/csv" });
+            let link = document.createElement('a');
+            link.href = window.URL.createObjectURL(blob);
+            const date = new Date();
+            link.download = 'result_' + `
+            ${date.getFullYear()}
+            ${(date.getMonth() + 1).toString().padStart(2, '0')}
+            ${date.getDate().toString().padStart(2, '0')}
+            ${date.getHours().toString().padStart(2, '0')}
+            ${date.getMinutes().toString().padStart(2, '0')}
+            ${date.getSeconds().toString().padStart(2, '0')}
+            `.replace(/\n|\r| /g, '') + '.csv';
+            link.click();
         },
 
         updateLeftVar() {
