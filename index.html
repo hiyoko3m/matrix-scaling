@@ -18,11 +18,10 @@
       >
         <div id="editor">
           <h2>Matrix setting</h2>
-          <form v-on:submit.prevent="initMatrixFromFile">
-            <label for="matrix-file">Choose an input file: </label>
-            <input type="file" id="matrix-file" accept=".csv" @change="onFileChange">
-            <button>Load from file</button>
+          <label for="matrix-file">Choose an input file: </label>
+          <input type="file" id="matrix-file" ref="matrixFile" accept=".csv" @change="onFileChange">
           </form>
+          <p>{{ inputFileMessage }}</p>
           <p>or from scratch:</p>
           <form v-on:submit.prevent="clearMatrix">
             <label for="row-num">Row number: </label>

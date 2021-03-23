@@ -13,6 +13,7 @@ const app = Vue.createApp({
         return {
             // for input
             inputFile: null,
+            inputFileMessage: "",
 
             inputRowNum: "3",
             rowNum: 3,
@@ -98,24 +99,74 @@ const app = Vue.createApp({
         },
         onFileChange(e) {
             this.inputFile = e.target.files[0];
-        },
-        initMatrixFromFile() {
+            this.$refs.matrixFile.value = '';
+            if (this.inputFile === undefined) {
+                return;
+            }
+
             let reader = new FileReader();
-            reader.readAsText(this.inputFile);
 
             reader.onload = () => {
                 let lines = reader.result.split("\n");
-                this.inputMatrix = [[1]];
-                for (let i = 0; i < lines.length; ++i) {
-                    values = lines[i].split(",");
+
+                let header = lines[0].split(",");
+                this.rowNum = parseInt(header[0]);
+                if (this.rowNum <= 0) {
+                    this.inputFileMessage = "Error: the input matrix should have at least 1 row";
+                    this.rowNum = this.inputRowNum = 3;
+                    this.columnNum = this.inputColumnNum = 3;
+                    this.clearMatrix();
+                    return;
                 }
 
-                this.inputRowNum = this.rowNum = this.inputMatrix.length;
-                this.inputColumnNum = this.columnNum = this.inputMatrix[0].length;
+                this.columnNum = parseInt(header[1]);
+                if (this.columnNum <= 0) {
+                    this.inputFileMessage = "Error: the input matrix should have at least 1 column";
+                    this.rowNum = this.inputRowNum = 3;
+                    this.columnNum = this.inputColumnNum = 3;
+                    this.clearMatrix();
+                    return;
+                }
+
+                this.inputRowNum = this.rowNum;
+                this.inputColumnNum = this.columnNum;
+
+                if (lines.length < this.rowNum + 1) {
+                    this.inputFileMessage = "Error: the input matrix should have " + this.rowNum + " rows but it does not";
+                    this.rowNum = this.inputRowNum = 3;
+                    this.columnNum = this.inputColumnNum = 3;
+                    this.clearMatrix();
+                    return;
+                }
+
+                this.inputMatrix = Array(this.rowNum);
+                for (let i = 0; i < this.rowNum; ++i) {
+                    let values = lines[i + 1].split(",");
+                    if (values.length < this.columnNum) {
+                        this.inputFileMessage = "Error: the input matrix should have " + this.columnNum + " columns but it does not";
+                        this.rowNum = this.inputRowNum = 3;
+                        this.columnNum = this.inputColumnNum = 3;
+                        this.clearMatrix();
+                        return;
+                    }
+                    this.inputMatrix[i] = Array(this.columnNum);
+                    for (let j = 0; j < this.columnNum; ++j) {
+                        this.inputMatrix[i][j] = parseInt(values[j]);
+                        if (this.inputMatrix[i][j] < 0) {
+                            this.inputFileMessage = "Error: the input matrix should not have a negative element but it does";
+                            this.rowNum = this.inputRowNum = 3;
+                            this.columnNum = this.inputColumnNum = 3;
+                            this.clearMatrix();
+                            return;
+                        }
+                    }
+                }
 
                 this.resetScaling();
                 this.resetSymCap();
             }
+
+            reader.readAsText(this.inputFile);
         },
         // Reset the initial matrix based on the input matrix
         // Called from this.resetScaling()
