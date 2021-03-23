@@ -12,6 +12,8 @@ const app = Vue.createApp({
     data() {
         return {
             // for input
+            inputFile: null,
+
             inputRowNum: "3",
             rowNum: 3,
 
@@ -94,7 +96,29 @@ const app = Vue.createApp({
             this.resetScaling();
             this.resetSymCap();
         },
+        onFileChange(e) {
+            this.inputFile = e.target.files[0];
+        },
+        initMatrixFromFile() {
+            let reader = new FileReader();
+            reader.readAsText(this.inputFile);
+
+            reader.onload = () => {
+                let lines = reader.result.split("\n");
+                this.inputMatrix = [[1]];
+                for (let i = 0; i < lines.length; ++i) {
+                    values = lines[i].split(",");
+                }
+
+                this.inputRowNum = this.rowNum = this.inputMatrix.length;
+                this.inputColumnNum = this.columnNum = this.inputMatrix[0].length;
+
+                this.resetScaling();
+                this.resetSymCap();
+            }
+        },
         // Reset the initial matrix based on the input matrix
+        // Called from this.resetScaling()
         resetMatrix() {
             this.matrix = Array(this.rowNum);
             for (let i = 0; i < this.rowNum; i++) {
